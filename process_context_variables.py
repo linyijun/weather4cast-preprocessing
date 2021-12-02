@@ -1,6 +1,9 @@
 import numpy as np
 import xarray as xr
 import os
+import h5py
+
+from config import get_params
 
 # ----------------------------------
 # preprocess - static features
@@ -104,15 +107,19 @@ def load_static(attributes, data_paths, crop=None, norm=True):
 
 if __name__ == "__main__":
 
-    data_path = '/home/yaoyi/lin00786/weather4cast/data/core-w4c/R1/data'
-    static_data_path = '/home/yaoyi/lin00786/weather4cast/data/static/'
-    splits_path = '/home/yaoyi/lin00786/weather4cast/'
+    import argparse
+    parser = argparse.ArgumentParser(description='preprocess')
+    parser.add_argument('--region', type=str, default='R1') 
+    args = parser.parse_args()
 
-    params = get_params(data_path, static_data_path, splits_path, region_id='R1')
+    data_path = f'/home/yaoyi/lin00786/weather4cast/data/core-w4c/{args.region}/'
+    static_data_path = '/home/yaoyi/lin00786/weather4cast/data/static/'
+
+    params = get_params(data_path, static_data_path, region_id=args.region)
     
     statics, descriptions = load_static(attributes=params['use_static'].split('-'), 
-                                    data_paths=params['static_paths'], 
-                                    crop=params['crop_static'])
+                                        data_paths=params['static_paths'], 
+                                        crop=params['crop_static'])
     print(statics.shape)
     print(descriptions)
 

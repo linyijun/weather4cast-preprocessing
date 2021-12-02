@@ -28,24 +28,20 @@ def n_static_vars(str_vars):
 
 def get_params(data_path,
                static_data_path,
-               splits_path,
                region_id='R1',
                seq_len=4,
                horizon=32,
-               size=256,
-               collapse_time=False):
+               size=256):
 
     """ Set paths & parameters to load/transform/save data and models.
 
     Params:
         data_path (str): path to the parent folder containing folders 
-        static_data_path (str): path to the folder containing the static channels
-        splits_path (str): path to the folder containing the csv and json files defining the data splits        
+        static_data_path (str): path to the folder containing the static channels   
         region_id (str, optional): region to load data from. Default: 'R1'.
         seq_len (int, optional): input sequence length. Default: 4.
         horizon (int, optional): output sequence length. Default: 32.
         size (int, optional): size of the region. Default: 256.
-        collapse_time (bool, optional): merging 
 
     Returns:
         dict: contains the params
@@ -70,31 +66,17 @@ def get_params(data_path,
                } 
     print(f'Using data for region {region_id} | size: {size} | {regions[region_id]["desc"]}')
 
-    # ------------
-    # 1. Files to load
-    # ------------
-    if region_id in ['R1', 'R2', 'R3', 'R7', 'R8']:
-        track = 'core-w4c'
-    else:
-        track = 'transfer-learning-w4c'
-
     data_params['region_id'] = region_id
-    data_params['data_path'] = os.path.join(data_path, track, region_id)
+    data_params['data_path'] = data_path
     
     data_params['static_paths'] = {}
     data_params['static_paths']['l'] = os.path.join(static_data_path, 
                                                     'Navigation_of_S_NWC_CT_MSG4_Europe-VISIR_20201106T120000Z.nc')
     data_params['static_paths']['a'] = os.path.join(static_data_path, 
-                                                    'S_NWC_TOPO_MSG4_+000.0_Europe-VISIR.raw')
-    
-    data_params['splits_path'] = os.path.join(splits_path, 'splits.csv')
-    data_params['test_split_path'] = os.path.join(splits_path, 'test_split.json')
-    data_params['blacklist_path'] = os.path.join(splits_path, 'blacklist.json')
-    
+                                                    'S_NWC_TOPO_MSG4_+000.0_Europe-VISIR.raw') 
     # ------------
     # 2. Data params    
     # ------------
-    data_params['collapse_time'] = collapse_time
     data_params['use_static'] = 'l-a'  # use '' to not use static features
     data_params['target_vars'] = ['temperature', 'crr_intensity', 'asii_turb_trop_prob', 'cma']
     data_params['products'] = {'CTTH': ['temperature'], 

@@ -227,21 +227,20 @@ def load_sequence_netcdf4(day_in_year, products, data_path, preprocess):
 
 if __name__ == "__main__":
 
-    data_path = '/home/yaoyi/lin00786/weather4cast/data/core-w4c/R1/data'
-    static_data_path = '/home/yaoyi/lin00786/weather4cast/data/static/'
-    splits_path = '/home/yaoyi/lin00786/weather4cast/'
-
-    params = get_params(data_path, static_data_path, splits_path, region_id='R1')
-
     import argparse
     parser = argparse.ArgumentParser(description='preprocess')
-    parser.add_argument('--year', type=str, default='2019') 
+    parser.add_argument('--region', type=str, default='R1') 
     args = parser.parse_args()
 
-    days = [args.year + '%03d'%i for i in range(366)]
-    # days += ['2020'+ '%03d'%i for i in range(366)]
+    data_path = f'/home/yaoyi/lin00786/weather4cast/data/core-w4c/{args.region}/'
+    static_data_path = '/home/yaoyi/lin00786/weather4cast/data/static/'
     
-    output_path = '/home/yaoyi/lin00786/weather4cast/preprocess-data/R1'
+    params = get_params(data_path, static_data_path, region_id=args.region)
+    
+    days = ['2019' + '%03d'%i for i in range(366)]
+    days += ['2020' + '%03d'%i for i in range(366)]
+    
+    output_path = f'/home/yaoyi/lin00786/weather4cast/preprocess-data/{args.region}'
 
     for day_in_year in days:
 
